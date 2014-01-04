@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <toolbox>
   <section id="grsnp" name="GRSNP">
-      <tool file="grsnp/overlapstatistics.xml"></tool>
       <tool file="grsnp/hypergeom4.xml"></tool>
   </section>
   <section name="MyTools" id="mTools">

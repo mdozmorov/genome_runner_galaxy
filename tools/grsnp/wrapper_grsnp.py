@@ -96,8 +96,6 @@ class GRSNP():
         # Go through result file content and rename Galaxy data_set with the correct file names.
         for f in result_files:
             old_content = open(f).read()
-            print f
-            print "OLD: ", old_content
             with open(f,"wb") as writer:
                 for line in old_content.split("\n"):
                     tmp = line
@@ -108,7 +106,6 @@ class GRSNP():
                     for i in range(len(self.opts.gf_names)):
                         tmp = tmp.replace(base_name(gfs[i]), self.opts.gf_names[i])
                     writer.write(tmp + "\n")
-            print "NEW: ", open(f).read()
         # rename filenames that were given Galaxy data_set names
         with open(os.path.join(self.opts.outputdir,"enrichment","name_conversion.txt"),'wb') as writer:
             for i in range(len(fois)):
