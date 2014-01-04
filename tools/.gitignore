@@ -1,1 +1,3 @@
-* !grsnp !.gitignore
+*
+!grsnp
+!.gitignore
