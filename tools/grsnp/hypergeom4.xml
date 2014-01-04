@@ -1,0 +1,57 @@
+<tool id="grsnp_hypergeom4" name="GenomeRunner SNP Enrichment Analysis" workflow_compatible="false">
+	<description>Calculates the enrichment of SNPs against genomic feature tracks</description>
+  	<command interpreter="python">
+		wrapper_grsnp.py 
+		-g 
+		"
+		#for $g in $gfs
+			${g.gf},
+		#end for
+		${gfs_tree}
+		"		
+		-f
+		"
+		#for $f in $fois
+			${f.foi},
+		#end for
+		"
+		--gf_names
+		"
+		#for $g in $gfs
+			${g.gf.name},
+		#end for
+		"
+		--foi_names
+		"
+		#for $f in $fois
+			${f.foi.name},
+		#end for
+		"
+		-b "$background" --bg_name "$background.name" -d "$html_file.files_path" -o "$html_file" -n "${out_prefix}"
+	</command>
+	<inputs>
+		<param name="background" multilpe="True" type="data" label="SNP background" format="bed"/>
+		<repeat name="fois" title="SNPs of Interest">
+			<param name="foi" value="" type="data" format="bed" label="SNPs"/>
+		</repeat>
+		<repeat name="gfs" title="Genomic Features">
+			<param name="gf" value="" type="data" format="bed" label="SNPs"/>
+		</repeat>
+	     <param name="gfs_tree" type="drill_down" display="checkbox" hierarchy="recurse" multiple="true" label="Choose genomic features to use" help="Selecting no tables will result in using all tables." from_file="grsnp_gfs.xml"/>
+		<param name="out_prefix" value="GRSNP" type="text" label="Title for the output file - to remind you what the job was for" size="80"
+      help="Letters and numbers only please - other characters will be removed"/>
+	    <sanitizer invalid_char="">
+	        <valid initial="string.letters,string.digits"/>
+	    </sanitizer>
+	</inputs>
+	<outputs>
+    	<data format="html" name="html_file"  label="${out_prefix}.html" />
+	</outputs>
+
+	<tests>
+		<test>
+			
+		</test>
+	</tests>
+	<help>Runs GenomeRunner SNP</help>
+</tool>
