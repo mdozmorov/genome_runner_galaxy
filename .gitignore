@@ -1,4 +1,4 @@
 *
 !tool_conf.xml
 !.gitignore 
-!tools
+!tools/*
