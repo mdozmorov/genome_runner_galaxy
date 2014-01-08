@@ -60,9 +60,10 @@ class GRSNP():
         retval = p.wait()
         sout.close()
         runlog = open(tlog,'r').readline()
+        grs.prep_html_heatmaps() # create the heatmap html result file
         flist = os.listdir(self.opts.outputdir)
         self.fix_datasetnames()
-        excludefiles = ['.prog']
+        excludefiles = ['.prog','? ?']
         flist = [x for x in flist if not x in excludefiles]
         html = self.fix_grsnp(flist,runlog)
         return html,retval
@@ -82,6 +83,47 @@ class GRSNP():
         res.append('<a href="grsnpinfilename">Original GenomeRunner SNP can be found here</a><br/><hr/>\n')
         res.append('</div>')
         return res # with our additions
+
+
+    def prep_html_heatmaps(self):
+        ''' Places the heatmap json data in a results html template file. 
+        '''
+        html_header = open(os.path.join(os.path.dirname(__file__),"results_template.html")).read()
+        html_res_path = os.path.join(self.opts.outputdir,"heatmaps.html")
+        h_j_path = os.path.join(self.opts.outputdir,"clustered.json")
+        c_j_path = os.path.join(self.opts.outputdir,"pcc_matrix.json")
+        # read in json heatmap data
+        str_heat = open(h_j_path).read()
+        str_heat_cor = open(c_j_path).read()
+        # delete the json files, don't want these in the results
+        os.remove(h_j_path)
+        os.remove(c_j_path)
+        # write out the heatmap html file
+        with open(html_res_path,'wb') as writer:
+            writer.write(html_header+"""<script type="text/javascript">
+                    $(function () {
+                        $('#heatmap').heatmap({
+                            json: """+ str_heat +"""
+                        });
+                        $('#heatmap_cor').heatmap({
+                            json: """+ str_heat_cor +"""
+                        });
+                    });
+                    </script>
+                </head>
+                <body>
+                    <ul class="nav nav-tabs">       
+                        <li><a href="#heatmap" data-toggle="tab">Enrichment Heatmap</a></li>
+                        <li><a href="#heatmap_cor" data-toggle="tab">Pearsons Correlation Heatmap</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" style="padding-left:10em" id="heatmap"></div>
+                        <div class="tab-pane" style="padding-left:10em" id="heatmap_cor"></div>
+                    </div>
+                </body>
+                </html>""")
+
+
 
 
     def fix_datasetnames(self):
@@ -138,10 +180,9 @@ if __name__ == '__main__':
     opts.gf_names = [x.strip() for x in opts.gf_names.split(",") if x != None and x.strip() != ""]
     opts.gfs = ",".join([x.strip() for x in opts.gfs.split(",") if x != None and x.strip() != ""])
     opts.fois = ",".join([x.strip() for x in opts.fois.split(",") if x != None and x.strip() != ""])
-    print opts        
 
-    f = GRSNP(opts) 
-    html,retval = f.run_grsnp(opts.fois,opts.gfs,opts.bg_path)
+    grs = GRSNP(opts) 
+    html,retval = grs.run_grsnp(opts.fois,opts.gfs,opts.bg_path)    
     f = open(opts.htmloutput, 'w')
     f.write(''.join(html))
     f.close()

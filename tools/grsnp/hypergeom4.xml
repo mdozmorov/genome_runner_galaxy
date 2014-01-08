@@ -27,7 +27,7 @@
 			${f.foi.name},
 		#end for
 		"
-		-b "$background" --bg_name "$background.name" -d "$html_file.files_path" -o "$html_file" -n "${out_prefix}"
+		-b "$background" --bg_name "$background.name" -d "$html_file.extra_files_path" -o "$html_file" -n "${out_prefix}"
 	</command>
 	<inputs>
 		<param name="background" multilpe="True" type="data" label="SNP background" format="bed"/>
@@ -37,7 +37,7 @@
 		<repeat name="gfs" title="Genomic Features">
 			<param name="gf" value="" type="data" format="bed" label="SNPs"/>
 		</repeat>
-	     <param name="gfs_tree" type="drill_down" display="checkbox" hierarchy="recurse" multiple="true" label="Choose genomic features to use" help="Selecting no tables will result in using all tables." from_file="grsnp_gfs.xml"/>
+	     <param name="gfs_tree" type="drill_down" display="checkbox" hierarchy="recurse" multiple="true" label="Choose genomic features to use" help="Select tables" from_file="grsnp_gfs.xml"/>
 		<param name="out_prefix" value="GRSNP" type="text" label="Title for the output file - to remind you what the job was for" size="80"
       help="Letters and numbers only please - other characters will be removed"/>
 	    <sanitizer invalid_char="">
