@@ -52,13 +52,10 @@ class GRSNP():
         """       
 
         """        
-        dummy,tlog = tempfile.mkstemp(prefix='grsnp',suffix=".log",dir=self.opts.outputdir)
-        sout = open(tlog,'w')
-        sout.flush()
+        dummy,tlog = tempfile.mkstemp(prefix='grsnp',suffix=".log",dir=self.opts.outputdir)       
         com = ["python","-m","grsnp.hypergeom4",foi_paths,gf_paths,background,'-p']
-        p = subprocess.Popen(com,shell=False,stderr=sout,stdout=sout,cwd=self.opts.outputdir)
+        p = subprocess.Popen(com,shell=False,stderr=sys.stdout,stdout=sys.stdout,cwd=self.opts.outputdir)
         retval = p.wait()
-        sout.close()
         runlog = open(tlog,'r').readline()
         grs.prep_html_heatmaps() # create the heatmap html result file
         flist = os.listdir(self.opts.outputdir)
@@ -180,7 +177,7 @@ if __name__ == '__main__':
     opts.gf_names = [x.strip() for x in opts.gf_names.split(",") if x != None and x.strip() != ""]
     opts.gfs = ",".join([x.strip() for x in opts.gfs.split(",") if x != None and x.strip() != ""])
     opts.fois = ",".join([x.strip() for x in opts.fois.split(",") if x != None and x.strip() != ""])
-
+    print opts
     grs = GRSNP(opts) 
     html,retval = grs.run_grsnp(opts.fois,opts.gfs,opts.bg_path)    
     f = open(opts.htmloutput, 'w')
